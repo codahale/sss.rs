@@ -24,6 +24,6 @@ fn bench_split(b: &mut Bencher) {
     let input = vec![1, 2, 3, 4, 5];
 
     b.iter(|| {
-        sss::split(5, 3, &input, &mut rng);
+        sss::split(5, 3, &input, &mut rng)
     })
 }
