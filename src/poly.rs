@@ -5,11 +5,7 @@ use gf256::*;
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
 pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
-    let mut res: u8 = 0;
-    for v in p.iter().rev() {
-        res = mul(res, x) ^ *v;
-    }
-    return res
+    p.iter().rev().fold(0u8, |res, &v| mul(res, x) ^ v)
 }
 
 /// Generates a random polynomial of the Nth degree with an X-intercept with the
