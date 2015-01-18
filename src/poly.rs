@@ -61,7 +61,6 @@ mod test {
                    vec![50, 160, 64, 83, 161])
     }
 
-
     #[test]
     fn test_interpolate() {
         assert_eq!(interpolate(&vec![(1,1), (2,2), (3,3)], 0), 0);
