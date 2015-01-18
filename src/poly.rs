@@ -1,3 +1,5 @@
+#![allow(unstable)]
+
 //! Implements polynomial operations in GF(2^8).
 
 use std::rand;

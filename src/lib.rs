@@ -1,5 +1,3 @@
-#![allow(unstable)]
-
 //! # Shamir's Secret Sharing algorithm over GF( 2^8 ).
 //!
 //! Shamir's Secret Sharing algorithm allows you to securely share a secret with
