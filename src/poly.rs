@@ -41,7 +41,7 @@ pub fn interpolate<'a>(points: &'a Vec<(u8, u8)>, x: u8) -> u8 {
         }
         value ^= mul(weight, ay)
     }
-    return value
+    value
 }
 
 #[cfg(test)]

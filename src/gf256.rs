@@ -3,10 +3,11 @@
 /// Multiply two elements of GF(2^8).
 pub fn mul(e: u8, a: u8) -> u8 {
     if e == 0 || a == 0 {
-        return 0
+        0
+    } else {
+        EXP[(LOG[e as usize] as usize +
+             LOG[a as usize] as usize)%255]
     }
-    return EXP[(LOG[e as usize] as usize +
-                LOG[a as usize] as usize)%255]
 }
 
 /// Divide one element of GF(2^8) by another.
@@ -25,7 +26,7 @@ pub fn div(e: u8, a: u8) -> u8 {
 		p += 255
 	}
 
-    return EXP[p as usize]
+    EXP[p as usize]
 }
 
 // 0x11b prime polynomial and 0x03 as generator
