@@ -79,7 +79,6 @@ use std::rand;
 
 use poly::*;
 
-
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
 pub fn split<'a, T: rand::Rng>(n: u8, k: u8, secret: &'a Vec<u8>, rng: &mut T) -> VecMap<Vec<u8>> {
@@ -88,10 +87,10 @@ pub fn split<'a, T: rand::Rng>(n: u8, k: u8, secret: &'a Vec<u8>, rng: &mut T) -
         generate(k-1, *b, rng)
     }).collect();
 
+    // Collect the evaluation of each polynomial with the share ID as the input.
     let mut shares: VecMap<Vec<u8>> = VecMap::with_capacity(n as usize);
     for id in (1..n+1) {
-        let share = polys.iter().map(|p| eval(p, id)).collect();
-        shares.insert(id as usize, share);
+        shares.insert(id as usize, polys.iter().map(|p| eval(p, id)).collect());
     }
     return shares;
 }
