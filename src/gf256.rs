@@ -5,7 +5,8 @@ pub fn mul(e: u8, a: u8) -> u8 {
     if e == 0 || a == 0 {
         return 0
     }
-    return EXP[(LOG[e as usize] as usize + LOG[a as usize] as usize)%255]
+    return EXP[(LOG[e as usize] as usize +
+                LOG[a as usize] as usize)%255]
 }
 
 /// Divide one element of GF(2^8) by another.
@@ -18,7 +19,8 @@ pub fn div(e: u8, a: u8) -> u8 {
         return 0
     }
 
-    let mut p = ((LOG[e as usize] as isize) - (LOG[a as usize] as isize)) % 255;
+    let mut p = ((LOG[e as usize] as isize) -
+                 (LOG[a as usize] as isize)) % 255;
     if p < 0 {
 		p += 255
 	}

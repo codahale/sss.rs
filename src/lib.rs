@@ -74,20 +74,23 @@
 //!
 //! This package has not been audited by cryptography or security professionals.
 
-use poly::{eval, generate, interpolate};
 use std::collections::VecMap;
 use std::rand;
 
-mod gf256;
-mod poly;
+use poly::*;
+
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
 pub fn split<'a, T: rand::Rng>(n: u8, k: u8, secret: &'a Vec<u8>, rng: &mut T) -> VecMap<Vec<u8>> {
-    let polys: Vec<Vec<u8>> = secret.iter().map( |b| generate(k-1, *b, rng) ).collect();
+    // Generate a random K-degree polynomial for each byte of the secret.
+    let polys: Vec<Vec<u8>> = secret.iter().map(|b| {
+        generate(k-1, *b, rng)
+    }).collect();
+
     let mut shares: VecMap<Vec<u8>> = VecMap::with_capacity(n as usize);
     for id in (1..n+1) {
-        let share: Vec<u8> = polys.iter().map( |p| eval(p, id) ).collect();
+        let share = polys.iter().map(|p| eval(p, id)).collect();
         shares.insert(id as usize, share);
     }
     return shares;
@@ -109,6 +112,9 @@ pub fn combine<'a>(shares: &'a VecMap<Vec<u8>>) -> Vec<u8> {
     return points.iter().map(|v| interpolate(v, 0)).collect();
 }
 
+mod gf256;
+mod poly;
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -119,6 +125,7 @@ mod tests {
     fn test_split() {
         let mut rng = rand::ChaChaRng::new_unseeded();
         let actual = split(5, 3, &vec![1, 2, 3, 4, 5], &mut rng);
+
         let mut expected: VecMap<Vec<u8>> = VecMap::new();
         expected.insert(1, vec![118, 163, 66, 80, 187]);
         expected.insert(2, vec![239, 91, 129, 172, 98]);
@@ -131,11 +138,11 @@ mod tests {
 
     #[test]
     fn test_combine() {
-        let mut expected: VecMap<Vec<u8>> = VecMap::new();
-        expected.insert(1, vec![118, 163, 66, 80, 187]);
-        expected.insert(2, vec![239, 91, 129, 172, 98]);
-        expected.insert(3, vec![152, 250, 192, 248, 220]);
+        let mut shares: VecMap<Vec<u8>> = VecMap::new();
+        shares.insert(1, vec![118, 163, 66, 80, 187]);
+        shares.insert(2, vec![239, 91, 129, 172, 98]);
+        shares.insert(3, vec![152, 250, 192, 248, 220]);
 
-        assert_eq!(vec![1, 2, 3, 4, 5], combine(&expected))
+        assert_eq!(combine(&shares), vec![1, 2, 3, 4, 5])
     }
 }
