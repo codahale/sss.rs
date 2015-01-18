@@ -45,11 +45,11 @@ mod tests {
         let actual = split(5, 3, &vec![1, 2, 3, 4, 5], &mut rng);
 
         let mut expected: VecMap<Vec<u8>> = VecMap::new();
-        expected.insert(1, vec![118, 163, 66, 80, 187]);
-        expected.insert(2, vec![239, 91, 129, 172, 98]);
-        expected.insert(3, vec![152, 250, 192, 248, 220]);
-        expected.insert(4, vec![198, 176, 28, 79, 203]);
-        expected.insert(5, vec![177, 17, 93, 27, 117]);
+        expected.insert(1, vec![64, 163, 216, 189, 193]);
+        expected.insert(2, vec![131, 91, 174, 109, 150]);
+        expected.insert(3, vec![194, 250, 117, 212, 82]);
+        expected.insert(4, vec![30, 176, 66, 214, 56]);
+        expected.insert(5, vec![95, 17, 153, 111, 252]);
 
         assert_eq!(actual, expected)
     }
@@ -57,9 +57,9 @@ mod tests {
     #[test]
     fn test_combine() {
         let mut shares: VecMap<Vec<u8>> = VecMap::new();
-        shares.insert(1, vec![118, 163, 66, 80, 187]);
-        shares.insert(2, vec![239, 91, 129, 172, 98]);
-        shares.insert(3, vec![152, 250, 192, 248, 220]);
+        shares.insert(1, vec![64, 163, 216, 189, 193]);
+        shares.insert(3, vec![194, 250, 117, 212, 82]);
+        shares.insert(5, vec![95, 17, 153, 111, 252]);
 
         assert_eq!(combine(&shares), vec![1, 2, 3, 4, 5])
     }

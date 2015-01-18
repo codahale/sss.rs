@@ -13,16 +13,16 @@ pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
 /// given value.
 pub fn generate<T: rand::Rng>(n: u8, x: u8, rng: &mut T) -> Vec<u8> {
     // Generate a random polynomial.
-    let mut p: Vec<u8> = rng.gen_iter().take(n as usize-2).collect();
+    let mut p: Vec<u8> = rng.gen_iter().take(n as usize).collect();
 
     // Set its X-intercept to the given value.
-    p.insert(0, x);
+    p[0] = x;
 
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
-    p.push(rng.gen_range(1, 255));
+    p[n as usize - 1] = rng.gen_range(1, 255);
 
-    return p;
+    p
 }
 
 /// Interpolates a vector of (X, Y) points, returning the Y value for the given
@@ -58,7 +58,7 @@ mod tests {
     fn test_generate() {
         let mut rng = rand::ChaChaRng::new_unseeded();
         assert_eq!(generate(5, 50, &mut rng),
-                   vec![50u8, 118u8, 160u8, 64u8, 84u8])
+                   vec![50, 160, 64, 83, 161])
     }
 
 
