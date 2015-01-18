@@ -12,11 +12,9 @@ pub fn split<'a, T: rand::Rng>(n: u8, k: u8, secret: &'a Vec<u8>, rng: &mut T) -
     }).collect();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
-    let mut shares: VecMap<Vec<u8>> = VecMap::with_capacity(n as usize);
-    for id in (1..n+1) {
-        shares.insert(id as usize, polys.iter().map(|p| eval(p, id)).collect());
-    }
-    return shares;
+    (1..n+1).map(|id| {
+        (id as usize, polys.iter().map(|p| eval(p, id)).collect())
+    }).collect()
 }
 
 /// Combine a map of share IDs into the original secret.
