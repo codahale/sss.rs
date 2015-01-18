@@ -7,9 +7,9 @@ use poly::*;
 /// a map of share IDs to share values.
 pub fn split<'a, T: rand::Rng>(n: u8, k: u8, secret: &'a Vec<u8>, rng: &mut T) -> VecMap<Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
-    let polys: Vec<Vec<u8>> = secret.iter().map(|b| {
+    let polys = secret.iter().map(|b| {
         generate(k-1, *b, rng)
-    }).collect();
+    }).collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
     (1..n+1).map(|id| {

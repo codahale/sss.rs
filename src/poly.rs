@@ -13,7 +13,7 @@ pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
 /// given value.
 pub fn generate<T: rand::Rng>(n: u8, x: u8, rng: &mut T) -> Vec<u8> {
     // Generate a random polynomial.
-    let mut p: Vec<u8> = rng.gen_iter().take(n as usize).collect();
+    let mut p = rng.gen_iter().take(n as usize).collect::<Vec<u8>>();
 
     // Set its X-intercept to the given value.
     p[0] = x;
