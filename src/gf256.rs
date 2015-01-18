@@ -28,21 +28,6 @@ pub fn div(e: u8, a: u8) -> u8 {
     return EXP[p as usize]
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn test_mul() {
-        assert_eq!(mul(90, 21), 254);
-    }
-
-    #[test]
-    fn test_div() {
-        assert_eq!(div(90, 21), 189);
-    }
-}
-
 // 0x11b prime polynomial and 0x03 as generator
 static EXP: [u8; 256] = [
     0x01, 0x03, 0x05, 0x0f, 0x11, 0x33, 0x55, 0xff, 0x1a, 0x2e, 0x72, 0x96,
@@ -93,3 +78,28 @@ static LOG: [u8; 256] = [
     0x67, 0x4a, 0xed, 0xde, 0xc5, 0x31, 0xfe, 0x18, 0x0d, 0x63, 0x8c, 0x80,
     0xc0, 0xf7, 0x70, 0x07,
     ];
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_mul() {
+        assert_eq!(mul(90, 21), 254);
+    }
+
+    #[test]
+    fn test_mul_zero() {
+        assert_eq!(mul(0, 21), 0);
+    }
+
+    #[test]
+    fn test_div() {
+        assert_eq!(div(90, 21), 189);
+    }
+
+    #[test]
+    fn test_div_zero() {
+        assert_eq!(div(0, 21), 0);
+    }
+}

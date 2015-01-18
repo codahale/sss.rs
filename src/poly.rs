@@ -45,7 +45,7 @@ pub fn interpolate<'a>(points: &'a Vec<(u8, u8)>, x: u8) -> u8 {
 }
 
 #[cfg(test)]
-mod tests {
+mod test {
     use super::*;
     use std::rand;
 

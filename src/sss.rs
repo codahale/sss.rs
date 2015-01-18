@@ -34,7 +34,7 @@ pub fn combine<'a>(shares: &'a VecMap<Vec<u8>>) -> Vec<u8> {
 }
 
 #[cfg(test)]
-mod tests {
+mod test {
     use super::*;
     use std::collections::VecMap;
     use std::rand;
