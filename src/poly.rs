@@ -14,15 +14,17 @@ pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
 pub fn generate<T: rand::Rng>(n: u8, y: u8, rng: &mut T) -> Vec<u8> {
-    // Generate a random polynomial.
-    let mut p = rng.gen_iter().take(n as usize).collect::<Vec<u8>>();
+    let mut p = Vec::with_capacity(n as usize);
 
     // Set its Y-intercept to the given value.
-    p[0] = y;
+    p.push(y);
+
+    // Generate random coefficients.
+    p.extend(rng.gen_iter().take(n as usize - 2));
 
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
-    p[n as usize - 1] = rng.gen_range(1, 255);
+    p.push(rng.gen_range(1, 255));
 
     p
 }
@@ -59,7 +61,7 @@ mod test {
     fn test_generate() {
         let mut rng = rand::ChaChaRng::new_unseeded();
         assert_eq!(generate(5, 50, &mut rng),
-                   vec![50, 160, 64, 83, 161])
+                   vec![50, 118, 160, 64, 84])
     }
 
     #[test]
