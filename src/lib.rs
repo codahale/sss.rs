@@ -72,7 +72,7 @@
 //!
 //! This package has not been audited by cryptography or security professionals.
 
-pub use sss::*;
+pub use sss::{combine, split};
 
 mod gf256;
 mod poly;

@@ -4,7 +4,7 @@
 
 use std::rand;
 
-use gf256::*;
+use gf256::{div, mul};
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
 pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
