@@ -6,7 +6,7 @@ pub fn mul(e: u8, a: u8) -> u8 {
         0
     } else {
         EXP[(LOG[e as usize] as usize +
-             LOG[a as usize] as usize)%255]
+             LOG[a as usize] as usize) % 255]
     }
 }
 
@@ -20,8 +20,8 @@ pub fn div(e: u8, a: u8) -> u8 {
         return 0
     }
 
-    let mut p = ((LOG[e as usize] as isize) -
-                 (LOG[a as usize] as isize)) % 255;
+    let mut p = (LOG[e as usize] as isize -
+                 LOG[a as usize] as isize) % 255;
     if p < 0 {
         p += 255
     }
