@@ -23,8 +23,8 @@ pub fn div(e: u8, a: u8) -> u8 {
     let mut p = ((LOG[e as usize] as isize) -
                  (LOG[a as usize] as isize)) % 255;
     if p < 0 {
-		p += 255
-	}
+        p += 255
+    }
 
     EXP[p as usize]
 }
