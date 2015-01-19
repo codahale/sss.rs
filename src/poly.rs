@@ -27,15 +27,14 @@ pub fn generate<T: rand::Rng>(n: u8, y: u8, rng: &mut T) -> Vec<u8> {
     p
 }
 
-/// Interpolates a vector of (X, Y) points, returning the Y value for the given
-/// X value.
-pub fn interpolate<'a>(points: &'a Vec<(u8, u8)>, x: u8) -> u8 {
+/// Interpolates a vector of (X, Y) points, returning the Y value at zero.
+pub fn y_intercept<'a>(points: &'a Vec<(u8, u8)>) -> u8 {
     let mut value = 0u8;
     for (i, &(ax, ay)) in points.iter().enumerate() {
         let mut weight = 1u8;
         for (j, &(bx, _)) in points.iter().enumerate() {
             if i != j {
-                let top = x ^ bx;
+                let top = bx; // xor 0
                 let bottom = ax ^ bx;
                 let factor = div(top, bottom);
                 weight = mul(weight, factor);
@@ -64,7 +63,7 @@ mod test {
     }
 
     #[test]
-    fn test_interpolate() {
-        assert_eq!(interpolate(&vec![(1,1), (2,2), (3,3)], 0), 0);
+    fn test_y_intercept() {
+        assert_eq!(y_intercept(&vec![(1,1), (2,2), (3,3)]), 0);
     }
 }

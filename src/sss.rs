@@ -32,7 +32,7 @@ pub fn combine<'a>(shares: &'a VecMap<Vec<u8>>) -> Vec<u8> {
             points[i].push((id as u8, *v));
         }
     }
-    points.iter().map(|v| interpolate(v, 0)).collect()
+    points.iter().map(y_intercept).collect()
 }
 
 #[cfg(test)]
