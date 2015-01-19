@@ -11,14 +11,14 @@ pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
     p.iter().rev().fold(0u8, |res, &v| mul(res, x) ^ v)
 }
 
-/// Generates a random polynomial of the Nth degree with an X-intercept with the
+/// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
 pub fn generate<T: rand::Rng>(n: u8, x: u8, rng: &mut T) -> Vec<u8> {
     // Generate a random polynomial.
     let mut p = rng.gen_iter().take(n as usize).collect::<Vec<u8>>();
 
-    // Set its X-intercept to the given value.
     p[0] = x;
+    // Set its Y-intercept to the given value.
 
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.

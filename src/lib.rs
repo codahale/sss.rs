@@ -36,7 +36,7 @@
 //! ## How It Works
 //!
 //! It begins by encoding a secret as a number (e.g., 42), and generating `N`
-//! random polynomial equations of degree `K`-1 which have an X-intercept equal
+//! random polynomial equations of degree `K`-1 which have an Y-intercept equal
 //! to the secret. Given `K=3`, the following equations might be generated:
 //!
 //! ```ignore
@@ -61,7 +61,7 @@
 //! shares to recover the secret, these (x, y) pairs are used as the input
 //! points for Lagrange interpolation, which produces a polynomial which matches
 //! the given points. This polynomial can be evaluated for f(0), producing the
-//! secret value--the common x-intercept for all the generated polynomials.
+//! secret value--the common Y-intercept for all the generated polynomials.
 //!
 //! If fewer than K shares are combined, the interpolated polynomial will be
 //! wrong, and the result of f(0) will not be the secret.
