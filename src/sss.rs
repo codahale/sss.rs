@@ -5,7 +5,7 @@ use poly::{eval, generate, y_intercept};
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
-pub fn split<'a, T: rand::Rng>(n: u8, k: u8, secret: &'a Vec<u8>, rng: &mut T) -> VecMap<Vec<u8>> {
+pub fn split<T: rand::Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> VecMap<Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
     let polys = secret.iter().map(|b| {
         generate(k-1, *b, rng)

@@ -19,7 +19,7 @@
 //! println!("Secret: {}", secret);
 //!
 //! // we generate 5 shares of which 3 are required
-//! let shares = split(5, 3, &secret.bytes().collect(), &mut rng);
+//! let shares = split(5, 3, secret.as_bytes(), &mut rng);
 //! println!("Shares: {:?}", shares);
 //!
 //! // we select 3 of those shares
