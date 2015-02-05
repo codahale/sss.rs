@@ -72,6 +72,9 @@
 //!
 //! This package has not been audited by cryptography or security professionals.
 
+#![feature(core)]
+#![feature(rand)]
+
 pub use sss::{combine, split};
 
 mod gf256;

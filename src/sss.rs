@@ -1,5 +1,3 @@
-#![allow(unstable)]
-
 use std::collections::VecMap;
 use std::rand;
 
