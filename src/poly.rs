@@ -34,10 +34,7 @@ pub fn y_intercept<'a>(points: &'a Vec<(u8, u8)>) -> u8 {
         let mut weight = 1u8;
         for (j, &(bx, _)) in points.iter().enumerate() {
             if i != j {
-                let top = bx; // xor 0
-                let bottom = ax ^ bx;
-                let factor = div(top, bottom);
-                weight = mul(weight, factor);
+                weight = mul(weight, div(bx, ax ^ bx));
             }
         }
         value ^= mul(weight, ay)
