@@ -1,5 +1,6 @@
+extern crate rand;
+
 use std::collections::VecMap;
-use std::rand;
 
 use poly::{eval, generate, y_intercept};
 
@@ -35,9 +36,10 @@ pub fn combine<'a>(shares: &'a VecMap<Vec<u8>>) -> Vec<u8> {
 
 #[cfg(test)]
 mod test {
+    extern crate rand;
+
     use super::*;
     use std::collections::VecMap;
-    use std::rand;
 
     #[test]
     fn test_split() {

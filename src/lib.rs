@@ -7,9 +7,12 @@
 //! ## Example
 //!
 //! ```
+//! #![feature(collections)]
+//!
+//! extern crate rand;
+//! extern crate sss;
+//!
 //! use std::collections::VecMap;
-//! use std::rand;
-//! use sss::{combine,split};
 //!
 //! // always use OsRng
 //! let mut rng = rand::OsRng::new().ok().expect("Failed to obtain OS RNG");
@@ -19,7 +22,7 @@
 //! println!("Secret: {}", secret);
 //!
 //! // we generate 5 shares of which 3 are required
-//! let shares = split(5, 3, secret.as_bytes(), &mut rng);
+//! let shares = sss::split(5, 3, secret.as_bytes(), &mut rng);
 //! println!("Shares: {:?}", shares);
 //!
 //! // we select 3 of those shares
@@ -29,7 +32,7 @@
 //! }
 //!
 //! // we combine them to recover the secret
-//! let recovered = combine(&selected);
+//! let recovered = sss::combine(&selected);
 //! println!("Recovered: {}", String::from_utf8(recovered).unwrap());
 //! ```
 //!
@@ -72,8 +75,9 @@
 //!
 //! This package has not been audited by cryptography or security professionals.
 
-#![feature(core)]
-#![feature(rand)]
+#![feature(collections)]
+
+extern crate rand;
 
 pub use sss::{combine, split};
 

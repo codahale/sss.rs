@@ -1,9 +1,10 @@
-#![allow(unstable)]
+#![feature(collections,test)]
+
+extern crate rand;
 extern crate sss;
 extern crate test;
 
 use std::collections::VecMap;
-use std::rand::ChaChaRng;
 use test::Bencher;
 
 #[bench]
@@ -20,7 +21,7 @@ fn bench_combine(b: &mut Bencher) {
 
 #[bench]
 fn bench_split(b: &mut Bencher) {
-    let mut rng = ChaChaRng::new_unseeded();
+    let mut rng = rand::ChaChaRng::new_unseeded();
     let input = vec![1, 2, 3, 4, 5];
 
     b.iter(|| {

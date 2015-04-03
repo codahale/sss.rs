@@ -1,6 +1,6 @@
 //! Implements polynomial operations in GF(2^8).
 
-use std::rand;
+extern crate rand;
 
 use gf256::{div, mul};
 
@@ -44,8 +44,9 @@ pub fn y_intercept<'a>(points: &'a Vec<(u8, u8)>) -> u8 {
 
 #[cfg(test)]
 mod test {
+    extern crate rand;
+
     use super::*;
-    use std::rand;
 
     #[test]
     fn test_eval() {
