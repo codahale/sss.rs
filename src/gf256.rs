@@ -87,6 +87,7 @@ mod test {
     #[test]
     fn test_mul() {
         assert_eq!(mul(90, 21), 254);
+        assert_eq!(mul(133, 5), 167);
     }
 
     #[test]
@@ -97,6 +98,8 @@ mod test {
     #[test]
     fn test_div() {
         assert_eq!(div(90, 21), 189);
+        assert_eq!(div(6, 55), 151);
+        assert_eq!(div(22, 192), 138);
     }
 
     #[test]

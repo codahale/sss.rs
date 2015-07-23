@@ -63,5 +63,7 @@ mod test {
     #[test]
     fn test_y_intercept() {
         assert_eq!(y_intercept(&vec![(1,1), (2,2), (3,3)]), 0);
+        assert_eq!(y_intercept(&vec![(1,80), (2,90), (3,20)]), 30);
+        assert_eq!(y_intercept(&vec![(1,43), (2,22), (3,86)]), 107);
     }
 }
