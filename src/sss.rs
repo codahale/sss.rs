@@ -6,14 +6,14 @@ use vec_map::VecMap;
 /// a map of share IDs to share values.
 pub fn split<T: Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> VecMap<Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
-    let polys = secret.iter().map(|b| {
-        generate(k-1, *b, rng)
-    }).collect::<Vec<Vec<u8>>>();
+    let polys = secret.iter()
+                      .map(|b| generate(k - 1, *b, rng))
+                      .collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
-    (1..n+1).map(|id| {
-        (id as usize, polys.iter().map(|p| eval(p, id)).collect())
-    }).collect()
+    (1..n + 1)
+        .map(|id| (id as usize, polys.iter().map(|p| eval(p, id)).collect()))
+        .collect()
 }
 
 /// Combine a map of share IDs into the original secret.
