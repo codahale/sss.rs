@@ -1,12 +1,10 @@
-extern crate rand;
-
-use std::collections::VecMap;
-
 use poly::{eval, generate, y_intercept};
+use rand::Rng;
+use vec_map::VecMap;
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
-pub fn split<T: rand::Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> VecMap<Vec<u8>> {
+pub fn split<T: Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> VecMap<Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
     let polys = secret.iter().map(|b| {
         generate(k-1, *b, rng)
@@ -36,14 +34,13 @@ pub fn combine<'a>(shares: &'a VecMap<Vec<u8>>) -> Vec<u8> {
 
 #[cfg(test)]
 mod test {
-    extern crate rand;
-
     use super::*;
-    use std::collections::VecMap;
+    use vec_map::VecMap;
+    use rand::ChaChaRng;
 
     #[test]
     fn test_split() {
-        let mut rng = rand::ChaChaRng::new_unseeded();
+        let mut rng = ChaChaRng::new_unseeded();
         let actual = split(5, 3, &vec![1, 2, 3, 4, 5], &mut rng);
 
         let mut expected: VecMap<Vec<u8>> = VecMap::new();

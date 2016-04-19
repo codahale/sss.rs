@@ -7,12 +7,9 @@
 //! ## Example
 //!
 //! ```
-//! #![feature(collections)]
-//!
 //! extern crate rand;
+//! extern crate vec_map;
 //! extern crate sss;
-//!
-//! use std::collections::VecMap;
 //!
 //! // always use OsRng
 //! let mut rng = rand::OsRng::new().ok().expect("Failed to obtain OS RNG");
@@ -26,7 +23,7 @@
 //! println!("Shares: {:?}", shares);
 //!
 //! // we select 3 of those shares
-//! let mut selected: VecMap<Vec<u8>> = VecMap::new();
+//! let mut selected: vec_map::VecMap<Vec<u8>> = vec_map::VecMap::new();
 //! for id in shares.keys().take(3) {
 //!     selected.insert(id, shares[id].clone());
 //! }
@@ -75,9 +72,8 @@
 //!
 //! This package has not been audited by cryptography or security professionals.
 
-#![feature(collections)]
-
 extern crate rand;
+extern crate vec_map;
 
 pub use sss::{combine, split};
 

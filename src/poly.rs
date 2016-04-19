@@ -1,8 +1,7 @@
 //! Implements polynomial operations in GF(2^8).
 
-extern crate rand;
-
 use gf256::{div, mul};
+use rand::Rng;
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
 pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
@@ -11,14 +10,14 @@ pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
-pub fn generate<T: rand::Rng>(n: u8, y: u8, rng: &mut T) -> Vec<u8> {
+pub fn generate<T: Rng>(n: u8, y: u8, rng: &mut T) -> Vec<u8> {
     let mut p = Vec::with_capacity(n as usize);
 
     // Set its Y-intercept to the given value.
     p.push(y);
 
     // Generate random coefficients.
-    p.extend(rng.gen_iter().take(n as usize - 2));
+    p.extend(rng.gen_iter::<u8>().take(n as usize - 2));
 
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
@@ -44,9 +43,8 @@ pub fn y_intercept<'a>(points: &'a Vec<(u8, u8)>) -> u8 {
 
 #[cfg(test)]
 mod test {
-    extern crate rand;
-
     use super::*;
+    use rand::ChaChaRng;
 
     #[test]
     fn test_eval() {
@@ -55,7 +53,7 @@ mod test {
 
     #[test]
     fn test_generate() {
-        let mut rng = rand::ChaChaRng::new_unseeded();
+        let mut rng = ChaChaRng::new_unseeded();
         assert_eq!(generate(5, 50, &mut rng),
                    vec![50, 118, 160, 64, 84])
     }
