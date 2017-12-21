@@ -8,7 +8,6 @@
 //!
 //! ```
 //! extern crate rand;
-//! extern crate vec_map;
 //! extern crate sss;
 //!
 //! // always use OsRng
@@ -23,9 +22,9 @@
 //! println!("Shares: {:?}", shares);
 //!
 //! // we select 3 of those shares
-//! let mut selected: vec_map::VecMap<Vec<u8>> = vec_map::VecMap::new();
+//! let mut selected: std::collections::HashMap<u8, Vec<u8>> = std::collections::HashMap::new();
 //! for id in shares.keys().take(3) {
-//!     selected.insert(id, shares[id].clone());
+//!     selected.insert(*id, shares[id].clone());
 //! }
 //!
 //! // we combine them to recover the secret
@@ -73,7 +72,6 @@
 //! This package has not been audited by cryptography or security professionals.
 
 extern crate rand;
-extern crate vec_map;
 
 pub use sss::{combine, split};
 

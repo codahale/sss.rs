@@ -6,4 +6,3 @@ authors = ["Coda Hale <coda.hale@gmail.com>"]
 
 [dependencies]
 rand = "*"
-vec_map = "*"
