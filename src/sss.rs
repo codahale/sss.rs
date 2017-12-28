@@ -7,7 +7,8 @@ use rand::Rng;
 /// a map of share IDs to share values.
 pub fn split<T: Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> HashMap<u8, Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
-    let polys = secret.iter()
+    let polys = secret
+        .iter()
         .map(|b| generate(k - 1, *b, rng))
         .collect::<Vec<Vec<u8>>>();
 

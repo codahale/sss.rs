@@ -1,4 +1,4 @@
-#![feature(collections,test)]
+#![feature(collections, test)]
 
 extern crate rand;
 extern crate sss;
@@ -14,9 +14,7 @@ fn bench_combine(b: &mut Bencher) {
     expected.insert(2, vec![239, 91, 129, 172, 98]);
     expected.insert(3, vec![152, 250, 192, 248, 220]);
 
-    b.iter(|| {
-        sss::combine(&expected)
-    })
+    b.iter(|| sss::combine(&expected))
 }
 
 #[bench]
@@ -24,7 +22,5 @@ fn bench_split(b: &mut Bencher) {
     let mut rng = rand::ChaChaRng::new_unseeded();
     let input = vec![1, 2, 3, 4, 5];
 
-    b.iter(|| {
-        sss::split(5, 3, &input, &mut rng)
-    })
+    b.iter(|| sss::split(5, 3, &input, &mut rng))
 }
