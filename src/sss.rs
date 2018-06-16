@@ -21,7 +21,7 @@ pub fn split<T: Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> HashMap<u8, Ve
 /// Combine a map of share IDs into the original secret.
 ///
 /// N.B.: There is no way to know if this is successful or not.
-pub fn combine<'a>(shares: &'a HashMap<u8, Vec<u8>>) -> Vec<u8> {
+pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) -> Vec<u8> {
     let mut points: Vec<Vec<(u8, u8)>> = Vec::new();
     for (id, share) in shares.iter() {
         for (i, v) in share.iter().enumerate() {
@@ -31,7 +31,7 @@ pub fn combine<'a>(shares: &'a HashMap<u8, Vec<u8>>) -> Vec<u8> {
             points[i].push((*id, *v));
         }
     }
-    points.iter().map(y_intercept).collect()
+    points.into_iter().map(|v| y_intercept(&v)).collect()
 }
 
 #[cfg(test)]

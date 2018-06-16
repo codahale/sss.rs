@@ -4,7 +4,7 @@ use gf256::{div, mul};
 use rand::Rng;
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
-pub fn eval(p: &Vec<u8>, x: u8) -> u8 {
+pub fn eval(p: &[u8], x: u8) -> u8 {
     p.iter().rev().fold(0u8, |res, &v| mul(res, x) ^ v)
 }
 
@@ -23,7 +23,7 @@ pub fn generate<T: Rng>(n: u8, y: u8, rng: &mut T) -> Vec<u8> {
 }
 
 /// Interpolates a vector of (X, Y) points, returning the Y value at zero.
-pub fn y_intercept<'a>(points: &'a Vec<(u8, u8)>) -> u8 {
+pub fn y_intercept(points: &[(u8, u8)]) -> u8 {
     let mut value = 0u8;
     for (i, &(ax, ay)) in points.iter().enumerate() {
         let mut weight = 1u8;
