@@ -37,19 +37,22 @@ pub fn combine<'a>(shares: &'a HashMap<u8, Vec<u8>>) -> Vec<u8> {
 #[cfg(test)]
 mod test {
     use super::*;
-    use rand::ChaChaRng;
+    use rand::{ChaChaRng, SeedableRng};
 
     #[test]
     fn test_split() {
-        let mut rng = ChaChaRng::new_unseeded();
+        let mut rng = ChaChaRng::from_seed([
+            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+            0, 0, 0,
+        ]);
         let actual = split(5, 3, &vec![1, 2, 3, 4, 5], &mut rng);
 
         let mut expected: HashMap<u8, Vec<u8>> = HashMap::new();
-        expected.insert(1, vec![118, 163, 66, 80, 187]);
-        expected.insert(2, vec![239, 91, 129, 172, 98]);
-        expected.insert(3, vec![152, 250, 192, 248, 220]);
-        expected.insert(4, vec![198, 176, 28, 79, 203]);
-        expected.insert(5, vec![177, 17, 93, 27, 117]);
+        expected.insert(1, vec![172, 146, 231, 45, 178]);
+        expected.insert(2, vec![64, 57, 208, 86, 112]);
+        expected.insert(3, vec![237, 169, 52, 127, 199]);
+        expected.insert(4, vec![131, 116, 190, 160, 239]);
+        expected.insert(5, vec![46, 228, 90, 137, 88]);
 
         assert_eq!(actual, expected)
     }
