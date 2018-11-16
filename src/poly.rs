@@ -1,7 +1,8 @@
 //! Implements polynomial operations in GF(2^8).
 
-use gf256::{div, mul};
 use rand::Rng;
+
+use gf256::{div, mul};
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
 pub fn eval(p: &[u8], x: u8) -> u8 {
@@ -39,8 +40,13 @@ pub fn y_intercept(points: &[(u8, u8)]) -> u8 {
 
 #[cfg(test)]
 mod test {
+    extern crate rand_chacha;
+
+    use rand::SeedableRng;
+
     use super::*;
-    use rand::{ChaChaRng, SeedableRng};
+
+    use self::rand_chacha::ChaChaRng;
 
     #[test]
     fn test_eval() {

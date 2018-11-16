@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
-use poly::{eval, generate, y_intercept};
 use rand::Rng;
+
+use poly::{eval, generate, y_intercept};
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
@@ -36,8 +37,13 @@ pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) ->
 
 #[cfg(test)]
 mod test {
+    extern crate rand_chacha;
+
+    use rand::SeedableRng;
+
     use super::*;
-    use rand::{ChaChaRng, SeedableRng};
+
+    use self::rand_chacha::ChaChaRng;
 
     #[test]
     fn test_split() {
