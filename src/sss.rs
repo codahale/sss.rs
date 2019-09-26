@@ -1,16 +1,16 @@
 use std::collections::HashMap;
 
-use rand::Rng;
+use getrandom::getrandom;
 
 use poly::{eval, generate, y_intercept};
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
-pub fn split<T: Rng>(n: u8, k: u8, secret: &[u8], rng: &mut T) -> HashMap<u8, Vec<u8>> {
+pub fn split(n: u8, k: u8, secret: &[u8]) -> HashMap<u8, Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
     let polys = secret
         .iter()
-        .map(|b| generate(k - 1, *b, rng))
+        .map(|b| generate(k - 1, *b, &mut getrandom))
         .collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
@@ -37,30 +37,30 @@ pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) ->
 
 #[cfg(test)]
 mod test {
-    extern crate rand_chacha;
-
-    use rand::SeedableRng;
-
+    extern crate itertools;
+    use self::itertools::Itertools;
     use super::*;
-
-    use self::rand_chacha::ChaChaRng;
 
     #[test]
     fn test_split() {
-        let mut rng = ChaChaRng::from_seed([
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0,
-        ]);
-        let actual = split(5, 3, &vec![1, 2, 3, 4, 5], &mut rng);
+        let secret = vec![1, 2, 3, 4, 5];
+        let splits = split(5, 3, &secret);
 
-        let mut expected: HashMap<u8, Vec<u8>> = HashMap::new();
-        expected.insert(1, vec![172, 146, 231, 45, 178]);
-        expected.insert(2, vec![64, 57, 208, 86, 112]);
-        expected.insert(3, vec![237, 169, 52, 127, 199]);
-        expected.insert(4, vec![131, 116, 190, 160, 239]);
-        expected.insert(5, vec![46, 228, 90, 137, 88]);
+        for keys in splits.keys().combinations(3) {
+            let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
+            for key in keys {
+                subset.insert(*key, splits.get(key).unwrap().to_vec());
+            }
+            assert_eq!(combine(&subset), secret);
+        }
 
-        assert_eq!(actual, expected)
+        for keys in splits.keys().combinations(2) {
+            let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
+            for key in keys {
+                subset.insert(*key, splits.get(key).unwrap().to_vec());
+            }
+            assert_ne!(combine(&subset), secret);
+        }
     }
 
     #[test]

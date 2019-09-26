@@ -1,6 +1,6 @@
 //! Implements polynomial operations in GF(2^8).
 
-use rand::Rng;
+use std::error::Error;
 
 use gf256::{div, mul};
 
@@ -11,15 +11,25 @@ pub fn eval(p: &[u8], x: u8) -> u8 {
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
-pub fn generate<T: Rng>(n: u8, y: u8, rng: &mut T) -> Vec<u8> {
-    let mut p = vec![0; n as usize];
+pub fn generate<E, T>(n: u8, y: u8, rng: &mut T) -> Vec<u8>
+where
+    E: Error,
+    T: Fn(&mut [u8]) -> Result<(), E>,
+{
+    let len = (n + 1) as usize;
+    let mut p = vec![0; len];
+
     // Set its Y-intercept to the given value.
     p[0] = y;
+
     // Generate random coefficients.
-    rng.fill_bytes(&mut p[1..(n as usize - 1)]);
+    rng(&mut p[1..]).unwrap();
+
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
-    p[n as usize - 1] = rng.gen_range(1, 255);
+    while *p.last().unwrap() == 0 {
+        rng(&mut p[len - 1..len]).unwrap();
+    }
     p
 }
 
@@ -40,13 +50,7 @@ pub fn y_intercept(points: &[(u8, u8)]) -> u8 {
 
 #[cfg(test)]
 mod test {
-    extern crate rand_chacha;
-
-    use rand::SeedableRng;
-
     use super::*;
-
-    use self::rand_chacha::ChaChaRng;
 
     #[test]
     fn test_eval() {
@@ -55,11 +59,17 @@ mod test {
 
     #[test]
     fn test_generate() {
-        let mut rng = ChaChaRng::from_seed([
-            0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0, 0,
-        ]);
-        assert_eq!(generate(5, 50, &mut rng), vec![50, 118, 184, 224, 144])
+        assert_eq!(
+            generate(5, 50, &mut fake_getrandom),
+            vec![50, 1, 2, 3, 4, 5]
+        )
+    }
+
+    fn fake_getrandom(dest: &mut [u8]) -> Result<(), std::io::Error> {
+        for x in 0..dest.len() {
+            dest[x] = (x + 1) as u8;
+        }
+        return Ok(());
     }
 
     #[test]

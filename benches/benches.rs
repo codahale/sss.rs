@@ -1,13 +1,10 @@
 #[macro_use]
 extern crate criterion;
-extern crate rand;
-extern crate rand_chacha;
 extern crate sss;
 
 use std::collections::HashMap;
 
 use criterion::Criterion;
-use rand::SeedableRng;
 
 fn combine(c: &mut Criterion) {
     let mut expected: HashMap<u8, Vec<u8>> = HashMap::new();
@@ -19,12 +16,9 @@ fn combine(c: &mut Criterion) {
 }
 
 fn split(c: &mut Criterion) {
-    let mut rng = rand_chacha::ChaChaRng::seed_from_u64(0);
     let input = vec![1, 2, 3, 4, 5];
 
-    c.bench_function("split", move |b| {
-        b.iter(|| sss::split(5, 3, &input, &mut rng))
-    });
+    c.bench_function("split", move |b| b.iter(|| sss::split(5, 3, &input)));
 }
 
 criterion_group!(benches, combine, split);
