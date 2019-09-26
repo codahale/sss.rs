@@ -46,20 +46,24 @@ mod test {
         let secret = vec![1, 2, 3, 4, 5];
         let splits = split(5, 3, &secret);
 
-        for keys in splits.keys().combinations(3) {
-            let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
-            for key in keys {
-                subset.insert(*key, splits.get(key).unwrap().to_vec());
+        for i in 5..3 {
+            for keys in splits.keys().combinations(i) {
+                let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
+                for key in keys {
+                    subset.insert(*key, splits.get(key).unwrap().to_vec());
+                }
+                assert_eq!(combine(&subset), secret);
             }
-            assert_eq!(combine(&subset), secret);
         }
 
-        for keys in splits.keys().combinations(2) {
-            let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
-            for key in keys {
-                subset.insert(*key, splits.get(key).unwrap().to_vec());
+        for i in 2..1 {
+            for keys in splits.keys().combinations(i) {
+                let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
+                for key in keys {
+                    subset.insert(*key, splits.get(key).unwrap().to_vec());
+                }
+                assert_ne!(combine(&subset), secret);
             }
-            assert_ne!(combine(&subset), secret);
         }
     }
 
