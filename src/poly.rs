@@ -34,7 +34,7 @@ where
 }
 
 /// Interpolates a vector of (X, Y) points, returning the Y value at zero.
-pub fn y_intercept(points: &[(u8, u8)]) -> u8 {
+pub fn y_intercept(points: Vec<(u8, u8)>) -> u8 {
     let mut value = 0u8;
     for (i, &(ax, ay)) in points.iter().enumerate() {
         let mut weight = 1u8;
@@ -74,8 +74,8 @@ mod test {
 
     #[test]
     fn test_y_intercept() {
-        assert_eq!(y_intercept(&vec![(1, 1), (2, 2), (3, 3)]), 0);
-        assert_eq!(y_intercept(&vec![(1, 80), (2, 90), (3, 20)]), 30);
-        assert_eq!(y_intercept(&vec![(1, 43), (2, 22), (3, 86)]), 107);
+        assert_eq!(y_intercept(vec![(1, 1), (2, 2), (3, 3)]), 0);
+        assert_eq!(y_intercept(vec![(1, 80), (2, 90), (3, 20)]), 30);
+        assert_eq!(y_intercept(vec![(1, 43), (2, 22), (3, 86)]), 107);
     }
 }

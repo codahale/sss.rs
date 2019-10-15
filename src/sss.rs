@@ -23,23 +23,23 @@ pub fn split(n: u8, k: u8, secret: &[u8]) -> HashMap<u8, Vec<u8>> {
 ///
 /// N.B.: There is no way to know if this is successful or not.
 pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) -> Vec<u8> {
-    let mut points: Vec<Vec<(u8, u8)>> = Vec::new();
-    for (id, share) in shares.iter() {
-        for (i, v) in share.iter().enumerate() {
-            if points.len() <= i {
-                points.push(Vec::new())
-            }
-            points[i].push((*id, *v));
-        }
+    let len = shares.values().next().unwrap().len();
+    if shares.values().any(|v| v.len() != len) {
+        panic!("mismatched share lengths")
     }
-    points.into_iter().map(|v| y_intercept(&v)).collect()
+
+    (0..len)
+        .map(|i| y_intercept(shares.iter().map(|(id, v)| (*id, v[i])).collect()))
+        .collect()
 }
 
 #[cfg(test)]
 mod test {
     extern crate itertools;
-    use self::itertools::Itertools;
+
     use super::*;
+
+    use self::itertools::Itertools;
 
     #[test]
     fn test_split() {
