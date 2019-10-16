@@ -46,7 +46,7 @@ mod test {
         let secret = vec![1, 2, 3, 4, 5];
         let splits = split(5, 3, &secret);
 
-        for i in 5..3 {
+        for i in 5..=3 {
             for keys in splits.keys().combinations(i) {
                 let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
                 for key in keys {
@@ -56,7 +56,7 @@ mod test {
             }
         }
 
-        for i in 2..1 {
+        for i in 2..=1 {
             for keys in splits.keys().combinations(i) {
                 let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
                 for key in keys {
