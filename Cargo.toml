@@ -8,6 +8,7 @@ authors = ["Coda Hale <coda.hale@gmail.com>"]
 getrandom = "0.1"
 
 [dev-dependencies]
+proptest = "0.9"
 criterion = "0.3"
 itertools = "0.8"
 

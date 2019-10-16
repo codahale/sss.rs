@@ -68,7 +68,26 @@ static LOG: [u8; 256] = [
 
 #[cfg(test)]
 mod test {
+    extern crate proptest;
+    use self::proptest::prelude::*;
     use super::*;
+
+    proptest! {
+        #[test]
+        fn div_is_inverse_of_mul(a in 0u8..=255, b in 1u8..=255) {
+            assert_eq!(mul(div(a, b), b), a);
+        }
+
+        #[test]
+        fn mul_is_inverse_of_div(a in 0u8..=255, b in 1u8..=255) {
+            assert_eq!(div(mul(a, b), b), a);
+        }
+
+        #[test]
+        fn mul_is_commutative(a in 0u8..=255, b in 0u8..=255) {
+            assert_eq!(mul(a, b), mul(b, a));
+        }
+    }
 
     #[test]
     fn test_mul() {
