@@ -11,13 +11,12 @@ pub fn eval(p: &[u8], x: u8) -> u8 {
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
-pub fn generate<E, T>(n: u8, y: u8, rng: &mut T) -> Vec<u8>
+pub fn generate<E, T>(n: usize, y: u8, rng: &mut T) -> Vec<u8>
 where
     E: Error,
     T: Fn(&mut [u8]) -> Result<(), E>,
 {
-    let len = (n + 1) as usize;
-    let mut p = vec![0; len];
+    let mut p = vec![0; n+1];
 
     // Set its Y-intercept to the given value.
     p[0] = y;
@@ -27,8 +26,8 @@ where
 
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
-    while *p.last().unwrap() == 0 {
-        rng(&mut p[len - 1..len]).unwrap();
+    while p[n] == 0 {
+        rng(&mut p[n..=n]).unwrap();
     }
     p
 }
@@ -61,13 +60,14 @@ mod test {
     fn test_generate() {
         assert_eq!(
             generate(5, 50, &mut fake_getrandom),
-            vec![50, 1, 2, 3, 4, 5]
+            vec![50, 1, 0, 0, 0, 1]
         )
     }
 
     fn fake_getrandom(dest: &mut [u8]) -> Result<(), std::io::Error> {
-        for x in 0..dest.len() {
-            dest[x] = (x + 1) as u8;
+        dest[0] = 1;
+        for x in 1..dest.len() {
+            dest[x] = 0;
         }
         return Ok(());
     }
