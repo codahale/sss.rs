@@ -16,7 +16,7 @@ where
     E: Error,
     T: Fn(&mut [u8]) -> Result<(), E>,
 {
-    let mut p = vec![0; n+1];
+    let mut p = vec![0; n + 1];
 
     // Set its Y-intercept to the given value.
     p[0] = y;
