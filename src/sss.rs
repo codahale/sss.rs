@@ -10,7 +10,7 @@ pub fn split(n: u8, k: u8, secret: &[u8]) -> HashMap<u8, Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
     let polys = secret
         .iter()
-        .map(|b| generate((k - 1) as usize, *b, &mut getrandom))
+        .map(|&b| generate((k - 1) as usize, b, &mut getrandom))
         .collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
@@ -29,7 +29,7 @@ pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) ->
     }
 
     (0..len)
-        .map(|i| y_intercept(shares.iter().map(|(id, v)| (*id, v[i])).collect()))
+        .map(|i| y_intercept(shares.iter().map(|(&id, v)| (id, v[i])).collect()))
         .collect()
 }
 
