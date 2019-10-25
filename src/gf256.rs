@@ -2,13 +2,19 @@
 
 /// Multiply two elements of GF(2^8).
 pub fn mul(e: u8, a: u8) -> u8 {
+    // This algorithm is constant-time, allowing us to perform GF256 arithmetic over secret values
+    // without leaking information about the values via timing.
     let mut aa = e;
     let mut bb = a;
     let mut r = 0;
+    // Loop over all 8 bits, regardless of whether or not it's required. aa != 0 is the usual loop
+    // condition, but here it's folded into the per-round bitmask.
     for _ in 0..8 {
+        // Perform r ^= bb iff aa & 1 == 0 && aa != 0.
         r ^= bb & ((aa & 1 != 0) as u8 * 0xff) & ((aa != 0) as u8 * 0xff);
         let t = bb & 0x80;
         bb <<= 1;
+        // Perform bb ^= 0x1b iff t != 0 && aa != 0.
         bb ^= 0x1b & ((t != 0) as u8 * 0xff) & ((aa != 0) as u8 * 0xff);
         aa >>= 1;
     }
@@ -21,11 +27,16 @@ pub fn div(e: u8, a: u8) -> u8 {
         panic!("Divide by zero: {} / {}", e, a)
     }
 
-    let mut v = 0;
-    for i in u8::min_value()..=u8::max_value() {
-        v += mul(i, e) & ((mul(i, a) == 1) as u8 * 0xff);
+    // Again, this algorithm is constant-time. First, we find the multiplicative inverse of `a` by
+    // iterating over all possible values, and using a bitmask to accumulate only that value which,
+    // when multiplied by `a`, is `1`.
+    let mut inv = 0;
+    for i in 0x00..=0xff {
+        inv += i & ((mul(i, a) == 1) as u8 * 0xff);
     }
-    v
+
+    // Finally, we multiply `e` by the multiplicative inverse of `a`.
+    mul(inv, e)
 }
 
 #[cfg(test)]
