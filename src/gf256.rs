@@ -1,11 +1,11 @@
 //! Implements basic arithmetic operations in GF(2^8).
 
 /// Multiply two elements of GF(2^8).
-pub fn mul(e: u8, a: u8) -> u8 {
+pub fn mul(lhs: u8, rhs: u8) -> u8 {
     // This algorithm is constant-time, allowing us to perform GF256 arithmetic over secret values
     // without leaking information about the values via timing.
-    let mut aa = e;
-    let mut bb = a;
+    let mut aa = lhs;
+    let mut bb = rhs;
     let mut r = 0;
     // Loop over all 8 bits, regardless of whether or not it's required. aa != 0 is the usual loop
     // condition, but here it's folded into the per-round bitmask.
@@ -22,9 +22,9 @@ pub fn mul(e: u8, a: u8) -> u8 {
 }
 
 /// Divide one element of GF(2^8) by another.
-pub fn div(e: u8, a: u8) -> u8 {
-    if a == 0 {
-        panic!("Divide by zero: {} / {}", e, a)
+pub fn div(lhs: u8, rhs: u8) -> u8 {
+    if rhs == 0 {
+        panic!("Divide by zero: {} / {}", lhs, rhs)
     }
 
     // Again, this algorithm is constant-time. First, we find the multiplicative inverse of `a` by
@@ -32,11 +32,11 @@ pub fn div(e: u8, a: u8) -> u8 {
     // when multiplied by `a`, is `1`.
     let mut inv = 0;
     for i in 0x00..=0xff {
-        inv += i & ((mul(i, a) == 1) as u8 * 0xff);
+        inv += i & ((mul(i, rhs) == 1) as u8 * 0xff);
     }
 
     // Finally, we multiply `e` by the multiplicative inverse of `a`.
-    mul(inv, e)
+    mul(inv, lhs)
 }
 
 #[cfg(test)]
