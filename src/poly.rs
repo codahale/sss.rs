@@ -11,7 +11,7 @@ pub fn eval(p: &[u8], x: u8) -> u8 {
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
-pub fn generate<E, T>(n: usize, y: u8, rng: &mut T) -> Vec<u8>
+pub fn generate<E, T>(n: usize, y: u8, rng: &T) -> Vec<u8>
 where
     E: Error,
     T: Fn(&mut [u8]) -> Result<(), E>,
