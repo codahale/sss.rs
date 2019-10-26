@@ -6,7 +6,7 @@ use gf256::{div, mul};
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
 pub fn eval(p: &[u8], x: u8) -> u8 {
-    p.iter().rev().fold(0u8, |res, &v| mul(res, x) ^ v)
+    p.iter().rev().fold(0, |res, &v| mul(res, x) ^ v)
 }
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
@@ -34,9 +34,9 @@ where
 
 /// Interpolates a vector of (X, Y) points, returning the Y value at zero.
 pub fn y_intercept(points: Vec<(u8, u8)>) -> u8 {
-    let mut value = 0u8;
+    let mut value = 0;
     for (i, &(ax, ay)) in points.iter().enumerate() {
-        let mut weight = 1u8;
+        let mut weight = 1;
         for (j, &(bx, _)) in points.iter().enumerate() {
             if i != j {
                 weight = mul(weight, div(bx, ax ^ bx));
