@@ -11,7 +11,7 @@ pub fn eval(p: &[u8], x: u8) -> u8 {
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
-pub fn generate<E, T>(n: usize, y: u8, rng: &T) -> Vec<u8>
+pub fn generate<E, T>(n: usize, y: u8, rng: T) -> Vec<u8>
 where
     E: Error,
     T: Fn(&mut [u8]) -> Result<(), E>,
@@ -59,7 +59,7 @@ mod test {
     #[test]
     fn test_generate() {
         assert_eq!(
-            generate(5, 50, &mut fake_getrandom),
+            generate(5, 50, fake_getrandom),
             vec![50, 1, 0, 0, 0, 1]
         )
     }

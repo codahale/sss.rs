@@ -10,7 +10,7 @@ pub fn split(n: u8, k: u8, secret: &[u8]) -> HashMap<u8, Vec<u8>> {
     // Generate a random K-degree polynomial for each byte of the secret.
     let polys = secret
         .iter()
-        .map(|&b| generate((k - 1) as usize, b, &getrandom))
+        .map(|&b| generate((k - 1) as usize, b, getrandom))
         .collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
