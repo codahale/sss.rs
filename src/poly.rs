@@ -27,7 +27,7 @@ where
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
     while p[n] == 0 {
-        rng(&mut p[n..=n]).unwrap();
+        rng(&mut p[n..]).unwrap();
     }
     p
 }
