@@ -58,10 +58,7 @@ mod test {
 
     #[test]
     fn test_generate() {
-        assert_eq!(
-            generate(5, 50, fake_getrandom),
-            vec![50, 1, 0, 0, 0, 1]
-        )
+        assert_eq!(generate(5, 50, fake_getrandom), vec![50, 1, 0, 0, 0, 1])
     }
 
     fn fake_getrandom(dest: &mut [u8]) -> Result<(), std::io::Error> {
