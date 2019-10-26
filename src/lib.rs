@@ -19,8 +19,8 @@
 //!
 //! // we select 3 of those shares
 //! let mut selected = std::collections::HashMap::new();
-//! for id in shares.keys().take(3) {
-//!     selected.insert(*id, shares[id].clone());
+//! for &id in shares.keys().take(3) {
+//!     selected.insert(id, shares[&id].clone());
 //! }
 //!
 //! // we combine them to recover the secret
