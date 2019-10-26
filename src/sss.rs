@@ -49,8 +49,8 @@ mod test {
         for i in 5..=3 {
             for keys in splits.keys().combinations(i) {
                 let mut subset = HashMap::new();
-                for key in keys {
-                    subset.insert(*key, splits.get(key).unwrap().to_vec());
+                for &key in keys {
+                    subset.insert(key, splits.get(&key).unwrap().to_vec());
                 }
                 assert_eq!(combine(&subset), secret);
             }
@@ -59,8 +59,8 @@ mod test {
         for i in 2..=1 {
             for keys in splits.keys().combinations(i) {
                 let mut subset = HashMap::new();
-                for key in keys {
-                    subset.insert(*key, splits.get(key).unwrap().to_vec());
+                for &key in keys {
+                    subset.insert(key, splits.get(&key).unwrap().to_vec());
                 }
                 assert_ne!(combine(&subset), secret);
             }
