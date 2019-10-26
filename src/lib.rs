@@ -18,7 +18,7 @@
 //! println!("Shares: {:?}", shares);
 //!
 //! // we select 3 of those shares
-//! let mut selected: std::collections::HashMap<u8, Vec<u8>> = std::collections::HashMap::new();
+//! let mut selected = std::collections::HashMap::new();
 //! for id in shares.keys().take(3) {
 //!     selected.insert(*id, shares[id].clone());
 //! }

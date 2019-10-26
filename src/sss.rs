@@ -48,7 +48,7 @@ mod test {
 
         for i in 5..=3 {
             for keys in splits.keys().combinations(i) {
-                let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
+                let mut subset = HashMap::new();
                 for key in keys {
                     subset.insert(*key, splits.get(key).unwrap().to_vec());
                 }
@@ -58,7 +58,7 @@ mod test {
 
         for i in 2..=1 {
             for keys in splits.keys().combinations(i) {
-                let mut subset: HashMap<u8, Vec<u8>> = HashMap::new();
+                let mut subset = HashMap::new();
                 for key in keys {
                     subset.insert(*key, splits.get(key).unwrap().to_vec());
                 }
@@ -69,7 +69,7 @@ mod test {
 
     #[test]
     fn test_combine() {
-        let mut shares: HashMap<u8, Vec<u8>> = HashMap::new();
+        let mut shares = HashMap::new();
         shares.insert(1, vec![64, 163, 216, 189, 193]);
         shares.insert(3, vec![194, 250, 117, 212, 82]);
         shares.insert(5, vec![95, 17, 153, 111, 252]);
