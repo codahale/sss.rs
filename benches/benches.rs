@@ -1,10 +1,9 @@
-#[macro_use]
 extern crate criterion;
 extern crate sss;
 
 use std::collections::HashMap;
 
-use criterion::Criterion;
+use criterion::{criterion_group, criterion_main, Criterion};
 
 fn combine(c: &mut Criterion) {
     let mut expected: HashMap<u8, Vec<u8>> = HashMap::new();
