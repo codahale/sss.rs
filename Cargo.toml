@@ -5,9 +5,10 @@ version = "0.0.1"
 authors = ["Coda Hale <coda.hale@gmail.com>"]
 
 [dependencies]
-getrandom = "0.1"
+rand = "^0.7"
 
 [dev-dependencies]
+rand_chacha = "^0.2"
 proptest = "0.9"
 criterion = "0.3"
 itertools = "0.8"

@@ -1,6 +1,6 @@
 //! Implements polynomial operations in GF(2^8).
 
-use std::error::Error;
+use rand::{CryptoRng, Rng};
 
 use gf256::{div, mul};
 
@@ -11,24 +11,23 @@ pub fn eval(p: &[u8], x: u8) -> u8 {
 
 /// Generates a random polynomial of the Nth degree with a Y-intercept with the
 /// given value.
-pub fn generate<E, T>(n: usize, y: u8, rng: T) -> Vec<u8>
+pub fn generate<R>(n: usize, y: u8, rng: &mut R) -> Vec<u8>
 where
-    E: Error,
-    T: Fn(&mut [u8]) -> Result<(), E>,
+    R: Rng + CryptoRng,
 {
+    // Allocate a vec of n+1 bytes.
     let mut p = vec![0; n + 1];
 
     // Set its Y-intercept to the given value.
     p[0] = y;
 
     // Generate random coefficients.
-    rng(&mut p[1..]).unwrap();
+    rng.fill_bytes(&mut p[1..n]);
 
     // Ensure the Nth coefficient is non-zero, otherwise it's an (N-1)th-degree
     // polynomial.
-    while p[n] == 0 {
-        rng(&mut p[n..]).unwrap();
-    }
+    p[n] = rng.gen_range(1, 255);
+
     p
 }
 
@@ -49,24 +48,38 @@ pub fn y_intercept(points: Vec<(u8, u8)>) -> u8 {
 
 #[cfg(test)]
 mod test {
+    extern crate proptest;
+    extern crate rand_chacha;
+
+    use rand::SeedableRng;
+
     use super::*;
+
+    use self::proptest::prelude::*;
+    use self::rand_chacha::ChaChaRng;
 
     #[test]
     fn test_eval() {
         assert_eq!(eval(&vec![1, 0, 2, 3], 2), 17);
     }
 
-    #[test]
-    fn test_generate() {
-        assert_eq!(generate(5, 50, fake_getrandom), vec![50, 1, 0, 0, 0, 1])
+    proptest! {
+        #[test]
+        fn generate_last_byte_is_never_zero(seed: [u8; 32]) {
+            let mut rng = ChaChaRng::from_seed(seed);
+            let p = generate(20, 100, &mut rng);
+            assert_ne!(p[20], 0);
+        }
     }
 
-    fn fake_getrandom(dest: &mut [u8]) -> Result<(), std::io::Error> {
-        dest[0] = 1;
-        for x in 1..dest.len() {
-            dest[x] = 0;
-        }
-        return Ok(());
+    #[test]
+    fn test_generate() {
+        let seed = [
+            0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0,
+            0, 0, 0,
+        ];
+        let mut rng = ChaChaRng::from_seed(seed);
+        assert_eq!(generate(5, 50, &mut rng), vec![50, 114, 155, 45, 8, 123])
     }
 
     #[test]

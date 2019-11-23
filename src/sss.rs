@@ -1,16 +1,18 @@
 use std::collections::HashMap;
 
-use getrandom::getrandom;
-
 use poly::{eval, generate, y_intercept};
+use rand::{CryptoRng, Rng};
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
-pub fn split(n: u8, k: u8, secret: &[u8]) -> HashMap<u8, Vec<u8>> {
+pub fn split<R>(n: u8, k: u8, secret: &[u8], rng: &mut R) -> HashMap<u8, Vec<u8>>
+where
+    R: Rng + CryptoRng,
+{
     // Generate a random K-degree polynomial for each byte of the secret.
     let polys = secret
         .iter()
-        .map(|&b| generate((k - 1) as usize, b, getrandom))
+        .map(|&b| generate((k - 1) as usize, b, rng))
         .collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
@@ -44,7 +46,8 @@ mod test {
     #[test]
     fn test_split() {
         let secret = vec![1, 2, 3, 4, 5];
-        let splits = split(5, 3, &secret);
+        let mut rng = rand::thread_rng();
+        let splits = split(5, 3, &secret, &mut rng);
 
         for i in 5..=3 {
             for keys in splits.keys().combinations(i) {

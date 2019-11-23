@@ -7,14 +7,18 @@
 //! ## Example
 //!
 //! ```
+//! extern crate rand;
 //! extern crate sss;
 //!
 //! // we start with a secret value
 //! let secret = "this is a super secret";
 //! println!("Secret: {}", secret);
 //!
+//! // and a cryptographically secure RNG
+//! let mut rng = rand::thread_rng();
+//!
 //! // we generate 5 shares of which 3 are required
-//! let shares = sss::split(5, 3, secret.as_bytes());
+//! let shares = sss::split(5, 3, secret.as_bytes(), &mut rng);
 //! println!("Shares: {:?}", shares);
 //!
 //! // we select 3 of those shares
@@ -67,7 +71,7 @@
 //!
 //! This package has not been audited by cryptography or security professionals.
 
-extern crate getrandom;
+extern crate rand;
 
 pub use sss::{combine, split};
 
