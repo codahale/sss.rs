@@ -1,7 +1,8 @@
 use std::collections::HashMap;
 
-use poly::{eval, generate, y_intercept};
 use rand::{CryptoRng, Rng};
+
+use poly::{eval, generate, y_intercept};
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
@@ -38,34 +39,41 @@ pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) ->
 #[cfg(test)]
 mod test {
     extern crate itertools;
+    extern crate proptest;
+    extern crate rand_chacha;
+
+    use rand::SeedableRng;
 
     use super::*;
 
     use self::itertools::Itertools;
+    use self::proptest::prelude::*;
+    use self::rand_chacha::ChaChaRng;
 
-    #[test]
-    fn test_split() {
-        let secret = vec![1, 2, 3, 4, 5];
-        let mut rng = rand::thread_rng();
-        let splits = split(5, 3, &secret, &mut rng);
+    proptest! {
+        #[test]
+        fn test_split(secret: Vec<u8>, seed: [u8; 32]) {
+            let mut rng = ChaChaRng::from_seed(seed);
+            let splits = split(5, 3, &secret, &mut rng);
 
-        for i in 5..=3 {
-            for keys in splits.keys().combinations(i) {
-                let mut subset = HashMap::new();
-                for &key in keys {
-                    subset.insert(key, splits.get(&key).unwrap().to_vec());
+            for i in 5..=3 {
+                for keys in splits.keys().combinations(i) {
+                    let mut subset = HashMap::new();
+                    for &key in keys {
+                        subset.insert(key, splits.get(&key).unwrap().to_vec());
+                    }
+                    assert_eq!(combine(&subset), secret);
                 }
-                assert_eq!(combine(&subset), secret);
             }
-        }
 
-        for i in 2..=1 {
-            for keys in splits.keys().combinations(i) {
-                let mut subset = HashMap::new();
-                for &key in keys {
-                    subset.insert(key, splits.get(&key).unwrap().to_vec());
+            for i in 2..=1 {
+                for keys in splits.keys().combinations(i) {
+                    let mut subset = HashMap::new();
+                    for &key in keys {
+                        subset.insert(key, splits.get(&key).unwrap().to_vec());
+                    }
+                    assert_ne!(combine(&subset), secret);
                 }
-                assert_ne!(combine(&subset), secret);
             }
         }
     }

@@ -56,17 +56,17 @@ mod test {
 
     proptest! {
         #[test]
-        fn div_is_inverse_of_mul(a in 0u8..=255, b in 1u8..=255) {
+        fn test_div_is_inverse_of_mul(a in 0u8..=255, b in 1u8..=255) {
             assert_eq!(mul(div(a, b), b), a);
         }
 
         #[test]
-        fn mul_is_inverse_of_div(a in 0u8..=255, b in 1u8..=255) {
+        fn test_mul_is_inverse_of_div(a in 0u8..=255, b in 1u8..=255) {
             assert_eq!(div(mul(a, b), b), a);
         }
 
         #[test]
-        fn mul_is_commutative(a in 0u8..=255, b in 0u8..=255) {
+        fn test_mul_is_commutative(a in 0u8..=255, b in 0u8..=255) {
             assert_eq!(mul(a, b), mul(b, a));
         }
     }
@@ -75,10 +75,6 @@ mod test {
     fn test_mul() {
         assert_eq!(mul(90, 21), 254);
         assert_eq!(mul(133, 5), 167);
-    }
-
-    #[test]
-    fn test_mul_zero() {
         assert_eq!(mul(0, 21), 0);
     }
 
@@ -87,10 +83,6 @@ mod test {
         assert_eq!(div(90, 21), 189);
         assert_eq!(div(6, 55), 151);
         assert_eq!(div(22, 192), 138);
-    }
-
-    #[test]
-    fn test_div_zero() {
         assert_eq!(div(0, 21), 0);
     }
 }

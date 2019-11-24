@@ -65,21 +65,12 @@ mod test {
 
     proptest! {
         #[test]
-        fn generate_last_byte_is_never_zero(seed: [u8; 32]) {
+        fn test_generate(seed: [u8; 32]) {
             let mut rng = ChaChaRng::from_seed(seed);
             let p = generate(20, 100, &mut rng);
+            assert_eq!(p[0], 100);
             assert_ne!(p[20], 0);
         }
-    }
-
-    #[test]
-    fn test_generate() {
-        let seed = [
-            0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0,
-            0, 0, 0,
-        ];
-        let mut rng = ChaChaRng::from_seed(seed);
-        assert_eq!(generate(5, 50, &mut rng), vec![50, 114, 155, 45, 8, 123])
     }
 
     #[test]
