@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::hash::BuildHasher;
 
 use rand::{CryptoRng, Rng};
 
@@ -25,7 +26,10 @@ where
 /// Combine a map of share IDs into the original secret.
 ///
 /// N.B.: There is no way to know if this is successful or not.
-pub fn combine<S: ::std::hash::BuildHasher>(shares: &HashMap<u8, Vec<u8>, S>) -> Vec<u8> {
+pub fn combine<S>(shares: &HashMap<u8, Vec<u8>, S>) -> Vec<u8>
+where
+    S: BuildHasher,
+{
     let len = shares.values().next().unwrap().len();
     if shares.values().any(|v| v.len() != len) {
         panic!("mismatched share lengths")
