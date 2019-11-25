@@ -77,14 +77,13 @@
 extern crate rand;
 
 mod gf256;
-mod poly;
 
 use std::collections::HashMap;
 use std::hash::BuildHasher;
 
 use rand::{CryptoRng, Rng};
 
-use poly::{eval, generate, y_intercept};
+use gf256::{eval, generate, y_intercept};
 
 /// Split a secret into N shares, of which K are required to re-combine. Returns
 /// a map of share IDs to share values.
