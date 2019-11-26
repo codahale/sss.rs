@@ -3,7 +3,7 @@
 use rand::{CryptoRng, Rng};
 
 /// Multiply two elements of GF(2^8).
-pub fn mul(lhs: u8, rhs: u8) -> u8 {
+fn mul(lhs: u8, rhs: u8) -> u8 {
     // This algorithm is constant-time, allowing us to perform GF256 arithmetic over secret values
     // without leaking information about the values via timing.
     let mut aa = lhs;
@@ -25,7 +25,7 @@ pub fn mul(lhs: u8, rhs: u8) -> u8 {
 }
 
 /// Divide one element of GF(2^8) by another.
-pub fn div(lhs: u8, rhs: u8) -> u8 {
+fn div(lhs: u8, rhs: u8) -> u8 {
     if rhs == 0 {
         panic!("Divide by zero: {} / {}", lhs, rhs)
     }
