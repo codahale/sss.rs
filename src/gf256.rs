@@ -77,17 +77,14 @@ where
 
 /// Interpolates a vector of (X, Y) points, returning the Y value at zero.
 pub fn y_intercept(points: Vec<(u8, u8)>) -> u8 {
-    let mut value = 0;
-    for (i, &(ax, ay)) in points.iter().enumerate() {
-        let mut weight = 1;
-        for (j, &(bx, _)) in points.iter().enumerate() {
-            if i != j {
-                weight = mul(weight, div(bx, ax ^ bx));
-            }
-        }
-        value ^= mul(weight, ay)
-    }
-    value
+    points.iter().enumerate().fold(0, |value, (i, &(ax, ay))| {
+        let weight = points
+            .iter()
+            .enumerate()
+            .filter(|&(j, _)| i != j)
+            .fold(1, |weight, (_, &(bx, _))| mul(weight, div(bx, ax ^ bx)));
+        value ^ mul(weight, ay)
+    })
 }
 
 #[cfg(test)]
