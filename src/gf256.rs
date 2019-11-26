@@ -2,6 +2,12 @@
 
 use rand::{CryptoRng, Rng};
 
+macro_rules! bool_to_mask {
+    ($e:expr) => {{
+        ($e as u8) * 0xff
+    }};
+}
+
 /// Multiply two elements of GF(2^8).
 fn mul(lhs: u8, rhs: u8) -> u8 {
     // This algorithm is constant-time, allowing us to perform GF256 arithmetic over secret values
@@ -13,12 +19,12 @@ fn mul(lhs: u8, rhs: u8) -> u8 {
     // condition, but here it's folded into the per-round bitmask.
     for _ in 0..8 {
         // Perform r ^= bb iff aa & 1 == 0 && aa != 0.
-        let loop_live = bool_to_mask(aa != 0);
-        r ^= bb & bool_to_mask(aa & 1 != 0) & loop_live;
+        let loop_live = bool_to_mask!(aa != 0);
+        r ^= bb & bool_to_mask!(aa & 1 != 0) & loop_live;
         let t = bb & 0x80;
         bb <<= 1;
         // Perform bb ^= 0x1b iff t != 0 && aa != 0.
-        bb ^= 0x1b & bool_to_mask(t != 0) & loop_live;
+        bb ^= 0x1b & bool_to_mask!(t != 0) & loop_live;
         aa >>= 1;
     }
     r
@@ -35,17 +41,11 @@ fn div(lhs: u8, rhs: u8) -> u8 {
     // when multiplied by `a`, is `1`.
     let mut inv = 0;
     for i in 0x00..=0xff {
-        inv += i & bool_to_mask(mul(i, rhs) == 1);
+        inv += i & bool_to_mask!(mul(i, rhs) == 1);
     }
 
     // Finally, we multiply `e` by the multiplicative inverse of `a`.
     mul(inv, lhs)
-}
-
-// If b is true, return 0xff, otherwise, return 0x00. Constant-time implementation.
-#[inline(always)]
-fn bool_to_mask(b: bool) -> u8 {
-    (b as u8) * 0xff
 }
 
 /// Evaluate a polynomial, returning the Y value for the given X value.
@@ -95,8 +95,9 @@ mod test {
     extern crate proptest;
     extern crate rand_chacha;
 
-    use super::*;
     use rand::SeedableRng;
+
+    use super::*;
 
     use self::proptest::prelude::*;
     use self::rand_chacha::ChaChaRng;
