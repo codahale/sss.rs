@@ -6,6 +6,9 @@ macro_rules! bool_to_mask {
     ($e:expr) => {{
         ($e as u8) * 0xff
     }};
+    ($e:expr, $($rest:expr), *) => {{
+        bool_to_mask!($e) & bool_to_mask!($($rest),*)
+    }};
 }
 
 /// Multiply two elements of GF(2^8).
@@ -19,12 +22,11 @@ fn mul(lhs: u8, rhs: u8) -> u8 {
     // condition, but here it's folded into the per-round bitmask.
     for _ in 0..8 {
         // Perform r ^= bb iff aa & 1 == 0 && aa != 0.
-        let loop_live = bool_to_mask!(aa != 0);
-        r ^= bb & bool_to_mask!(aa & 1 != 0) & loop_live;
+        r ^= bb & bool_to_mask!(aa & 1 != 0, aa != 0);
         let t = bb & 0x80;
         bb <<= 1;
         // Perform bb ^= 0x1b iff t != 0 && aa != 0.
-        bb ^= 0x1b & bool_to_mask!(t != 0) & loop_live;
+        bb ^= 0x1b & bool_to_mask!(t != 0, aa != 0);
         aa >>= 1;
     }
     r
