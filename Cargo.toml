@@ -5,13 +5,13 @@ version = "0.0.1"
 authors = ["Coda Hale <coda.hale@gmail.com>"]
 
 [dependencies]
-rand = "^0.7"
+rand = "~0.7"
 
 [dev-dependencies]
-rand_chacha = "^0.2"
-proptest = "0.9"
-criterion = "0.3"
-itertools = "0.8"
+rand_chacha = "~0.2"
+proptest = "~0.9"
+criterion = "~0.3"
+itertools = "~0.8"
 
 [[bench]]
 name = "benches"
