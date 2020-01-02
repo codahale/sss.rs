@@ -98,7 +98,7 @@ where
         .collect::<Vec<Vec<u8>>>();
 
     // Collect the evaluation of each polynomial with the share ID as the input.
-    (1..=n)
+    (1..(n - 1))
         .map(|id| (id, polys.iter().map(|p| eval(p, id)).collect()))
         .collect()
 }
